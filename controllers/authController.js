@@ -42,10 +42,9 @@ const registerUser = async (req, res) => {
     }
 
     const userData = {
-      id: 'usr-' + Date.now(),
       name: name.trim(),
       email: cleanEmail,
-      password: password, // In production, bcrypt is used
+      password: password,
       phone: phone || '',
       address: {
         street: street || '',
@@ -55,20 +54,21 @@ const registerUser = async (req, res) => {
       role: 'customer'
     };
 
+    let savedId = 'usr-' + Date.now();
+
     if (getDbStatus()) {
-      try {
-        const newUser = new User(userData);
-        await newUser.save();
-      } catch (err) {
-        console.warn('[User DB Error]', err.message);
-      }
+      const newUser = new User(userData);
+      const saved = await newUser.save();
+      savedId = saved._id.toString();
+      console.log('[MongoDB] User saved to Atlas:', saved.email);
     }
 
-    memoryUsers.push(userData);
+    // Also keep in memory for fallback
+    memoryUsers.push({ ...userData, id: savedId });
 
     // Return safe user info
     const safeUser = {
-      id: userData.id,
+      id: savedId,
       name: userData.name,
       email: userData.email,
       phone: userData.phone,
