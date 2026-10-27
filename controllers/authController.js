@@ -79,6 +79,7 @@ const registerUser = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Account created successfully! Welcome to Royal Sweet Shop.',
+      db_warning: getDbStatus() ? null : '⚠️ Database is currently disconnected. Your data was not saved to the cloud.',
       data: safeUser
     });
   } catch (error) {
@@ -121,6 +122,7 @@ const loginUser = async (req, res) => {
     res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
+      db_warning: getDbStatus() ? null : '⚠️ Database is currently disconnected. Running in offline mode.',
       data: safeUser
     });
   } catch (error) {
