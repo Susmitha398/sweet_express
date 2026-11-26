@@ -24,6 +24,31 @@ function calculateDistanceKm(lat1, lon1, lat2, lon2) {
 let memorySweets = [...seedSweets];
 let memoryCategories = [...seedCategories];
 
+const getRazorpayTestProduct = () => ({
+  id: 'razorpay-test-item',
+  name: 'Razorpay Payment Test Item (₹1)',
+  slug: 'razorpay-test-item',
+  category: 'Payment Test',
+  categorySlug: 'payment-test',
+  description: 'Temporary one-rupee item for checking the online payment flow.',
+  detailedDescription: 'Payment test item only. No physical product will be delivered.',
+  shopLocation: 'Online Test Checkout',
+  pricePerKg: 1,
+  originalPricePerKg: 1,
+  offer: 'TEST ONLY',
+  rating: 5,
+  reviewsCount: 0,
+  weightOptions: [{ weight: '1 pc', multiplier: 1, label: 'One test item' }],
+  image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop&q=80',
+  ingredients: [],
+  shelfLife: 'Test item',
+  dietary: 'Test only',
+  isFeatured: true,
+  isBestseller: false,
+  inStock: true,
+  tags: ['razorpay-test']
+});
+
 // Auto-seed if Mongo is connected
 async function ensureMongoSeeded() {
   if (!getDbStatus()) return;
@@ -92,6 +117,10 @@ const getAllSweets = async (req, res) => {
           s.category.toLowerCase().includes(query)
         );
       }
+    }
+
+    if (process.env.ENABLE_RAZORPAY_TEST_PRODUCT !== 'false' && (!category || category === 'all') && !search) {
+      sweetsList.push(getRazorpayTestProduct());
     }
 
     // Attach dynamic live distance if user coordinates provided

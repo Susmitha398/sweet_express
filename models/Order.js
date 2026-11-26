@@ -28,8 +28,10 @@ const orderSchema = new mongoose.Schema({
   deliveryFee: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
   totalAmount: { type: Number, required: true },
-  paymentMethod: { type: String, enum: ['cod', 'upi', 'card'], default: 'cod' },
+  paymentMethod: { type: String, enum: ['cod', 'razorpay', 'upi', 'card'], default: 'cod' },
   paymentStatus: { type: String, default: 'Pending' },
+  razorpayOrderId: { type: String },
+  razorpayPaymentId: { type: String },
   orderStatus: { type: String, default: 'Confirmed' },
   estimatedDeliveryTime: { type: String, default: '30-45 mins' },
   createdAt: { type: Date, default: Date.now }
